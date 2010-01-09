@@ -40,6 +40,6 @@ int STK_WindowBlitTo(STK_Window *win, SDL_Rect *des_r, SDL_Surface *src, SDL_Rec
 int STK_WindowDrawBox(STK_Window *win, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 color);
 int STK_WindowDrawRect(STK_Window *win, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 color);
 int STK_WindowUpdateRect( Sint16 x, Sint16 y, Sint16 w, Sint16 h);
-
+SDL_Rect STK_WindowGetRect ();
 
 #endif /* _STK_WINDOW_H_ */

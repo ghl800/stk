@@ -205,3 +205,46 @@ int STK_RadioButtonAdapterToChild(STK_RadioButton *rb)
 		
 	return 0;
 }
+
+/*
+char *STK_RadioButtonGetText (STK_RadioButton *rb)
+{
+	return STK_LabelGetText (rb->label);
+}
+*/
+
+void STK_RadioButtonSetToggled (STK_RadioButton *rb)
+{
+	rb->state = STK_RADIOBUTTON_TOGGLE;
+	STK_WidgetEventRedraw((STK_Widget *)rb);
+}
+
+void STK_RadioButtonSetRelease (STK_RadioButton *rb)
+{
+	rb->state = STK_RADIOBUTTON_RELEASE;
+	STK_WidgetEventRedraw((STK_Widget *)rb);
+}
+
+void STK_RadioButtonSetState (STK_RadioButton *rb, int n)
+{
+	rb->state = (n) ? STK_RADIOBUTTON_TOGGLE:STK_RADIOBUTTON_RELEASE;
+	STK_WidgetEventRedraw((STK_Widget *)rb);
+}
+
+int STK_RadioButtonSetFont (STK_RadioButton *rb, STK_Font *font)
+{
+	if (!font)
+	{
+		fprintf(stderr, "STK_RadioButtonSetFont: the font is null.\n");
+		return -1;
+	}
+	 
+	if (!rb)
+	{
+		fprintf(stderr, "STK_RadioButtonSetFont: the rb is null.\n");
+		return -1;
+	}
+	STK_LabelSetFont (rb->label, font);
+	STK_RadioButtonFillLabel(rb);
+	return 0;
+}

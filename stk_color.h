@@ -38,6 +38,14 @@
 #define STK_MCOLOR2INT(s, m)		( (Uint32)SDL_MapRGB(s->format, m) )
 #define STK_COLOR2INT(s, c)		( (Uint32)SDL_MapRGB(s->format, c.r, c.g, c.b) )
 
+#define STK_RGB(r,g,b)	(((((r)<<8)|(g))<<8)|(b))
+#define STK_RRGB(s,r,g,b)	do { \
+		Uint32 tmp = (s); \
+		(b) = tmp & 0xff; \
+		(g) = (tmp >> 8) & 0xff; \
+		(r) = (tmp >> 16) & 0xff; \
+} while (0)
+
 
 enum STK_ColorType {
 	STK_COLOR_BACKGROUND,

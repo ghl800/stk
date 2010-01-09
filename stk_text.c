@@ -190,3 +190,192 @@ int STK_TextDeleteStr(STK_Text *text, int pos, int count)
 	return 0;
 }
 
+/*
+char *STK_TextGetText (STK_Text *text)
+{
+	if (text->length == 0)
+	  return NULL;
+	return text->data;
+}
+*/
+
+char *STK_TextIndex (STK_Text *text, int pos, char *ch)
+{
+	if (text->length == 0)
+	  return NULL;
+	
+	if (pos > text->length || pos < 0)
+	{
+		fprintf(stderr, "STK_TextFindChar: pos is too large or too small.\n");
+		return NULL;
+	}
+
+	return index( text->data + pos, ch);
+}
+
+//STK_TextList
+
+STK_TextNode *STK_TextNodeNew(const char *str)
+{
+	STK_TextNode *tn;
+	tn = STK_TEXTNODE (STK_Malloc (sizeof(STK_TextNode)));
+	if (!tn)
+	  return NULL;
+
+	tn->text = STK_TextNew(str);
+	tn->next = tn;
+	tn->prev = tn;
+	return tn;
+}
+
+int STK_TextNodeFree (STK_TextNode *tn)
+{
+	if (tn){
+		if (!STK_TextFree (tn->text))
+		  free(tn);
+	}
+	return 0;
+}
+
+STK_TextList *STK_TextListNew()
+{
+	STK_TextList *tl;
+	tl = STK_TEXTLIST (STK_Malloc (sizeof(STK_TextList)));
+	
+	if (!tl)
+		return NULL;
+	tl->node = NULL;
+	tl->length = 0;
+	
+	return tl;
+}
+
+int STK_TextListAppendStr (STK_TextList *tl, const char *str)
+{
+	STK_TextNode *tn = STK_TextNodeNew(str);
+	
+	if (!tn)
+	{
+		fprintf(stderr, "Cann't create text node.\n");
+		return -1;
+	}
+
+	if (!tl->node)
+	  tl->node = tn;
+	else
+	{
+		/*
+		STK_TextNode *p = (tl->node)->prev;
+		tn->next = p->next;
+		tn->prev = p;
+		(p->next)->prev = tn;
+		p->next = tn
+		*/
+
+		tn->prev = (tl->node)->prev;
+		tn->next = tl->node;
+		((tl->node)->prev)->next = tn;
+		(tl->node)->prev = tn;
+	}
+	++tl->length;
+
+	return 0;	
+}
+
+STK_Text *STK_TextListGetNthText (STK_TextList *tl, int n)
+{
+	if (!tl->length)
+	{
+		fprintf (stderr, "STK_TextListGetNthText: The list is NULL.\n");
+		return NULL;
+	}
+
+	int index,i,flag;
+	index = n % tl->length;
+	flag = (n >= 0) ? 1 : -1;
+	if (abs(index) > (tl->length +1) / 2)
+	  index -= tl->length * flag;
+	
+	flag = (index >= 0) ? 1 : -1;
+	STK_TextNode *p = tl->node;
+	
+	for(i=0; i < abs(index); ++i)
+	  if (flag > 0)
+		p = p->next;
+	  else
+		p = p->prev;
+
+	return p->text;
+}
+
+char *STK_TextListGetNthStr (STK_TextList *tl, int n)
+{
+	if (!STK_TextListGetNthText(tl,n))
+	  return NULL;
+
+	return STK_TextGetStr(STK_TextListGetNthText(tl,n));
+}
+
+int STK_TextListRemoveNth (STK_TextList *tl, int n)
+{
+	if (!tl->length)
+	{
+		fprintf(stderr, "STK_TextListRomoveNth: the list is NULL.\n");
+		return -1;
+	}
+
+	int index,i;
+	index = n % tl->length;
+	if (n > tl->length/2)
+	  n -= tl->length;
+	
+	STK_TextNode *node = tl->node;
+	for (i=0; i<abs(index); ++i)
+	{
+		if (index > 0)
+			node = node->next;
+		else
+			node = node->prev;
+	}
+	
+	
+	if (node == tl->node)
+	  tl->node = node->next;
+
+	(node->next)->prev = node->prev;
+	(node->prev)->next = node->next;
+	
+	--tl->length;
+	
+	if (!tl->length)
+	  tl->node = NULL;
+
+	STK_TextNodeFree(node);
+
+/*
+	if (!STK_TextNodeFree(node))
+	{
+		fprintf (stderr, "STK_TextListRemoveNth: Don't Free Text Node.\n");
+		return -1;
+	}
+*/
+	node = NULL;
+	return 0;
+}
+
+int STK_TextListRemove (STK_TextList *tl)
+{
+	return STK_TextListRemoveNth (tl, -1);
+}
+
+int STK_TextListFree (STK_TextList *tl)
+{
+	if (!tl)
+	  return 0;
+
+	while (tl->length)
+		STK_TextListRemove (tl);
+	
+	return 0;	
+}
+

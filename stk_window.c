@@ -492,3 +492,12 @@ int STK_WindowUpdateRect( Sint16 x, Sint16 y, Sint16 w, Sint16 h)
 	
 	return 0;
 }
+
+SDL_Rect STK_WindowGetRect()
+{
+	STK_Window *win = STK_WindowGetTop();
+	SDL_Rect rect = {0,0,0,0};
+	if (win)
+		rect = win->widget.rect;
+	return rect;
+}

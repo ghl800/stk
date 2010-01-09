@@ -47,7 +47,8 @@ STK_MsgBox *STK_MsgBoxNew(Uint16 x, Uint16 y, Uint16 w, Uint16 h, char *str)
 	msgbox->start_line = 0;
 	msgbox->end_line = 0;
 	msgbox->interval = 4;
-	msgbox->log = 1;
+	msgbox->log = 0;
+	msgbox->log_file_name = NULL;
 	msgbox->font = STK_FontGetDefaultFont(0);
 
 	width = 60;
@@ -66,7 +67,7 @@ STK_MsgBox *STK_MsgBoxNew(Uint16 x, Uint16 y, Uint16 w, Uint16 h, char *str)
 				widget->rect.h - 2 * widget->border );
 	msgbox->cur_x = 0;
 	msgbox->cur_y = 0;
-	
+
 	if (str) {
 		STK_MsgBoxAddMsg(msgbox, str);
 	}	
@@ -102,7 +103,8 @@ void STK_MsgBoxDraw(STK_Widget *widget)
 				msgbox->linebuf[i]->data, 
 				widget, 
 				&rect, 
-				&widget->fgcolor, 
+//				&widget->fgcolor, 
+				&msgbox->fgcolor[i],
 				&widget->bgcolor );
 		i++;
 		i %= STK_MSGBOX_LINEBUF_NUM;
@@ -113,6 +115,9 @@ void STK_MsgBoxClose(STK_Widget *widget)
 {
 	STK_MsgBox *msgbox = (STK_MsgBox *)widget;
 	int i = 0;
+	
+	// release log file name
+	free(msgbox->log_file_name);
 	
 	// release the text line buffer
 	for (i = 0; i< STK_MSGBOX_LINEBUF_NUM; i++) {
@@ -125,7 +130,7 @@ void STK_MsgBoxClose(STK_Widget *widget)
 	// release surface
 	if (widget->surface)
 		SDL_FreeSurface(widget->surface);
-			
+
 	// release STK_MsgBox
 	free(msgbox);	
 }
@@ -161,7 +166,7 @@ int STK_MsgBoxCalcDisplayLineWindow(STK_MsgBox *msgbox, int font_height)
 	return 0;
 }
 
-int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
+int STK_MsgBoxAddColorMsg(STK_MsgBox *msgbox, char *str, SDL_Color color)
 {
 	int i;
 	
@@ -172,8 +177,8 @@ int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
 		char *psrc;
 		char *p, *saveptr;
 		char **p1, **p0;
-		int i, n;
-		
+		int i, n; 
+		 
 		n = 0;
 		psrc = (char *)STK_Malloc(strlen(str) + 1);
 		strcpy(psrc, str);
@@ -184,6 +189,7 @@ int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
 		
 		if (n == 0) {
 			msgbox->linebuf[msgbox->end_line] = STK_TextNew(str);
+			msgbox->fgcolor[msgbox->end_line] = color;
 			STK_MsgBoxLog(msgbox);
 			msgbox->end_line++;
 			msgbox->end_line %= STK_MSGBOX_LINEBUF_NUM;
@@ -205,6 +211,7 @@ int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
 			p1 = p0;
 			for (i=0; i<t; i++) {
 				msgbox->linebuf[msgbox->end_line] = STK_TextNew(p1[i]);
+				msgbox->fgcolor[msgbox->end_line] = color;
 				STK_MsgBoxLog(msgbox);
 				msgbox->end_line++;
 				msgbox->end_line %= STK_MSGBOX_LINEBUF_NUM;
@@ -219,14 +226,24 @@ int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
 	return 0;
 }
 
+int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str)
+{
+	return STK_MsgBoxAddColorMsg(msgbox, str, ((STK_Widget *)msgbox)->fgcolor);
+}
+
 int STK_MsgBoxLog(STK_MsgBox *msgbox)
 {
 	FILE *fp;
-	
 	if (msgbox->log) {
 		// if log flag swith on, we need to record the buffer content to log file
-		if ((fp = fopen("/root/log.txt", "a")) == NULL) {
-			printf("Can't open log file: log.txt");
+		if (!msgbox->log_file_name)
+		{
+			fprintf(stderr, "STK_MsgBoxLog: I don't know log file name.");
+			exit(-1);
+		}
+
+		if ((fp = fopen(msgbox->log_file_name, "a")) == NULL) {
+			fprintf(stderr, "STK_MsgBoxLog: Can't open log file: %s\n", msgbox->log_file_name);
 			exit(-1);
 		}
 		
@@ -268,4 +285,9 @@ int STK_MsgBoxSetSize(STK_MsgBox *msgbox, Uint32 width, Uint32 height)
 	return 0;
 }
 
-
+void STK_MsgBoxSetLogFileName(STK_MsgBox *msgbox, char *file_name)
+{
+	msgbox->log_file_name = (char *)STK_Malloc (sizeof(char)*strlen(file_name));
+	strcpy(msgbox->log_file_name, file_name);
+	msgbox->log = 1;
+}

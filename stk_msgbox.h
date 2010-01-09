@@ -14,6 +14,9 @@ typedef struct STK_MsgBox {
 	STK_Text *linebuf[STK_MSGBOX_LINEBUF_NUM];	// point to line bufs
 	SDL_Rect textarea;		// area to fill up text
 	
+	//SDL_Color fgcolor[STK_MSGBOX_LINEBUF_NUM]; // the color of each line
+	SDL_Color fgcolor[STK_MSGBOX_LINEBUF_NUM]; // the color of each line
+
 	Uint16 start_line;		// start line to draw
 	Uint16 end_line;		// end line to draw
 	
@@ -22,7 +25,7 @@ typedef struct STK_MsgBox {
 	
 	Uint32 interval;		// the interval between text
 	Uint32 log;			// log or not?
-
+	char *log_file_name;		// save logs file name
 } STK_MsgBox;
 
 STK_MsgBox *STK_MsgBoxNew(Uint16 x, Uint16 y, Uint16 w, Uint16 h, char *str);
@@ -30,6 +33,7 @@ void STK_MsgBoxDraw(STK_Widget *widget);
 void STK_MsgBoxClose(STK_Widget *widget);
 int STK_MsgBoxRegisterType();
 
+int STK_MsgBoxAddColorMsg(STK_MsgBox *msgbox, char *str, SDL_Color color);
 int STK_MsgBoxAddMsg(STK_MsgBox *msgbox, char *str);
 int STK_MsgBoxSetFont(STK_MsgBox *msgbox, STK_Font *font);
 int STK_MsgBoxSetSize(STK_MsgBox *msgbox, Uint32 width, Uint32 height);
