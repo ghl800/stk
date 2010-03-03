@@ -36,7 +36,7 @@ STK_Entry *STK_EntryNew(char *initial_str, Uint16 limited_num, Uint16 x, Uint16 
 int STK_EntryRegisterType();
 void STK_EntryDraw(STK_Widget *widget);
 void STK_EntryClose(STK_Widget *widget);
-
+char *STK_EntryGetStr(STK_Entry *entry);
 
 #endif /* _STK_ENTRY_H_ */
 

@@ -151,8 +151,15 @@ int STK_WidgetSetDims(STK_Widget *widget, SDL_Rect *r)
 	return 0;
 }
 
+SDL_Rect STK_WidgetGetDemi(STK_Widget *widget)
+{
+        return widget->rect;
+}
 int STK_WidgetClose(STK_Widget *widget)
 {
+	// clear the widget in the singal list
+	STK_SignalClose(widget);
+
 	// here, to free the widget and its child widgets
 	// later finish it
 	STK_WidgetListNode *prev;
@@ -177,12 +184,11 @@ int STK_WidgetClose(STK_Widget *widget)
 		prev = wl;
 		wl = wl->next;
 	}
-	
 	// clear the widget's drawing on the window
 	// put these codes here, we feel afraid not very suitable, later we will write a DISTROY event to call
 	widget->flags |= WIDGET_DESTROY;
 	STK_WidgetDraw(widget);
-	
+
 	// get the widget type related close function
 	F_Widget_Close close = STK_WidgetGetClose(widget);
 	if (close) {
@@ -503,3 +509,4 @@ int STK_WidgetSetFixed(STK_Widget *widget, Uint32 flag)
 		
 	return 0;
 }
+

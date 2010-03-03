@@ -235,3 +235,7 @@ int STK_EntryKeyBackspace(STK_Entry *entry)
 	return 0;
 }
 
+char *STK_EntryGetStr(STK_Entry *entry)
+{
+        return STK_TextToStr(entry->text);
+}

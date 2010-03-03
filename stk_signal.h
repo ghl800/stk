@@ -27,6 +27,7 @@ int STK_SignalInit();
 int STK_SignalNew(char *signal);
 int STK_SignalConnect(STK_Widget *widget, char *signal, F_Signal_Callback callback, void *userdata);
 int STK_SignalEmit(STK_Widget *widget, char *signal, void *signaldata);
-
+int STK_SignalDisconnectFromWidget (STK_Widget *widget, char *signal);
+int STK_SignalClose(STK_Widget *widget);
 
 #endif /* _STK_SIGNAL_H_ */

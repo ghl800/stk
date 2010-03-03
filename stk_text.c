@@ -190,6 +190,13 @@ int STK_TextDeleteStr(STK_Text *text, int pos, int count)
 	return 0;
 }
 
+char *STK_TextToStr (STK_Text *text)
+{
+        if (text->length == 0)
+                return NULL;
+        return text->data;
+}
+
 /*
 char *STK_TextGetText (STK_Text *text)
 {

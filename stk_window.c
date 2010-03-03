@@ -27,7 +27,8 @@ STK_Window *STK_WindowNew( Sint16 x, Sint16 y, Sint16 width, Sint16 height)
 	widget->rect.y = y;
 	widget->rect.w = width;
 	widget->rect.h = height;
-	
+	widget->flags |= WIDGET_FOCUSABLE;
+
 	// when create, the visible flags is set to 0, means not display now
 	win->visible = 0;
 	win->pressed = 0;
@@ -320,7 +321,6 @@ int STK_WindowEvent( SDL_Event *event )
 	STK_Widget *w;
 	
 	int xrel, yrel;
-	
 	// if the event type is SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, STK_EVENT and so on
 	if (win && event->type >= SDL_MOUSEMOTION) {
 		// calculate the relative coordinates
@@ -500,4 +500,14 @@ SDL_Rect STK_WindowGetRect()
 	if (win)
 		rect = win->widget.rect;
 	return rect;
+}
+
+int STK_WindowSetBGColor (Uint8 r, Uint8 g, Uint8 b)
+{
+	STK_Window *win = STK_WindowGetTop();
+
+	win->bgcolor = SDL_MapRGB(win->widget.surface->format, r, g, b);
+//	win->bgcolor = STK_MCOLOR2INT(((STK_Widget *)win)->surface, r, g, b);
+	STK_WindowRedraw();
+	return 0;	
 }

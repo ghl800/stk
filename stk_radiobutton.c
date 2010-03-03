@@ -60,8 +60,13 @@ void STK_RadioButtonDraw(STK_Widget *widget)
 	STK_RadioButton *rb = (STK_RadioButton *)widget;
 	
 	if (!widget->fixed) 
+	{
 		STK_RadioButtonAdapterToChild(rb);
-	
+		
+		/* modified by guhl 2010.01.17 */
+		Uint32 tmpcolor = STK_COLOR2INT(widget->surface, widget->bgcolor);
+		SDL_FillRect(widget->surface, NULL, tmpcolor);
+	}
 	// convert state	
 	if (widget->state == 1) {
 		rb->state 
@@ -106,13 +111,16 @@ void STK_RadioButtonClose(STK_Widget *widget)
 
 
 void STK_RadioButtonFilling(STK_RadioButton *rb, Uint32 pattern)
-{
+{ 
 	STK_Widget *widget = (STK_Widget *)rb;
 	SDL_Rect rect;
 	Uint32 tmpcolor;
-		
+	Uint32 x,y;
+	
+	y = (widget->rect.h - rb->header_size)/2;
 	// area 1: header part area, fill picture 
-	STK_BaseRectAssign(&rect, widget->border, widget->border, rb->header_size, rb->header_size);
+	//STK_BaseRectAssign(&rect, widget->border, widget->border, rb->header_size, rb->header_size);
+	STK_BaseRectAssign(&rect, widget->border, y, rb->header_size, rb->header_size);
 //	rb->image.fillstyle = STK_IMAGE_FILLSTYLE_MATRIX;
 	STK_ImageFillRect(widget->surface, &rect, STK_IMAGE_KIND_BOX, pattern, &rb->image, 0);
 
@@ -246,5 +254,35 @@ int STK_RadioButtonSetFont (STK_RadioButton *rb, STK_Font *font)
 	}
 	STK_LabelSetFont (rb->label, font);
 	STK_RadioButtonFillLabel(rb);
+	return 0;
+}
+
+
+int STK_RadioButtonSetColor(STK_RadioButton *rb, int which, Uint8 r, Uint8 g, Uint8 b)
+{
+	if (!rb)
+	  return -1;
+
+	STK_Widget *widget = (STK_Widget *) rb;
+
+	STK_LabelSetColor (rb->label, which, r, g, b);
+	
+	if (which == STK_COLOR_BACKGROUND)
+	  STK_BaseColorAssign(&widget->bgcolor, r, g, b);
+
+#if 0 
+	
+	if (which == STK_COLOR_FOREGROUND)
+	{
+		STK_LabelSetColor (rb->label, which, r, g, b);
+	}
+	else
+	{
+		STK_BaseColorAssign(&widget->bgcolor, r, g, b);
+		STK_LabelSetColor (rb->label, which, r, g, b);
+	}
+#endif
+
+	STK_WidgetEventRedraw (widget);
 	return 0;
 }
