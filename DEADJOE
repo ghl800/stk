@@ -1,3 +1,15 @@
+
+*** These modified files were found in JOE when it aborted on Tue Mar  9 14:50:38 2010
+*** JOE was aborted because the terminal closed
+
+*** These modified files were found in JOE when it aborted on Tue Mar  9 14:50:38 2010
+*** JOE was aborted by UNIX signal 1
+
+*** File '(Unnamed)'
+strtok_r
+STK_LabelCalculatePattern
+
+*** File 'stk_label.c'
 #include <stdarg.h>
 #include <malloc.h>
 #include <string.h>
@@ -298,11 +310,11 @@ int STK_LabelSetAlignment(STK_Label *label, int alignment)
 	return 0;
 }
 
-int STK_LabelSetCaption(STK_Label *label, char *caption)
+int STK_LabelSetText(STK_Label *label, char * text)
 {
 	STK_Widget *widget = (STK_Widget *)label;
 	
-	if (!label || !caption)
+	if (!label || !text)
 		return -1;
 	
 	if (label->caption) {
@@ -310,9 +322,9 @@ int STK_LabelSetCaption(STK_Label *label, char *caption)
 		label->caption = NULL;
 	}
 	// because the c string have a zero char in the end, malloc text size + 1 
-	label->caption = (char *)STK_Malloc(strlen(caption) + 1);
+	label->caption = (char *)STK_Malloc(strlen(text) + 1);
 	// after this copy, the last char left in caption is 0
-	strcpy(label->caption, caption);
+	strcpy(label->caption, text);
 	
 	if (!widget->fixed)
 		STK_LabelAdapterToString(label);
@@ -322,7 +334,7 @@ int STK_LabelSetCaption(STK_Label *label, char *caption)
 	return 0;
 }
 
-char *STK_LabelGetCaption(STK_Label *label)
+char *STK_LabelGetText(STK_Label *label)
 {
 	return label->caption;
 }
@@ -365,3 +377,86 @@ int STK_LabelSetFont(STK_Label *label, STK_Font *font)
 	return 0;
 }
 
+
+*** File '(Unnamed)'
+Rect
+Rect 
+ Rect
+_rect
+Rect
+lynloong
+lynloong
+lynloong
+roundoff
+Dims
+
+*** File '(Unnamed)'
+Demi
+Demi
+draw
+al
+alignment
+title
+setdims
+alignment
+draw
+STK_LabelDraw
+pcaption
+draw
+STK_LabelDraw
+
+*** File '(Unnamed)'
+lemote_lib.c
+lemote_lib.c
+lemote_lib.c
+lemote_lib.c
+lemote_lib.c
+lemote_lib.c
+stk_label.c
+lemote_lib.c
+lemote_lib.c
+lemote_lib.c
+stk_label.c
+
+*** These modified files were found in JOE when it aborted on Thu Mar 18 17:02:44 2010
+*** JOE was aborted because the terminal closed
+
+*** These modified files were found in JOE when it aborted on Thu Mar 18 17:02:44 2010
+*** JOE was aborted by UNIX signal 1
+
+*** File '(Unnamed)'
+Rect
+Rect 
+ Rect
+_rect
+Rect
+lynloong
+lynloong
+lynloong
+roundoff
+Dims
+
+*** File '(Unnamed)'
+draw_btn_all
+label
+STK_Font
+printColorStr
+printColorStr
+state
+printStr
+printColorMsg
+go
+go_par
+
+*** File '(Unnamed)'
+lemote.h
+lemote_lib.c
+lemote_lib.c
+callback.c
+lemote_lib.c
+main.c
+main.c
+main.c
+main.c
+main.c
+stk_text.c

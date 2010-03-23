@@ -157,7 +157,7 @@ int STK_ButtonSetText(STK_Button *button, char *str)
 	STK_Widget *widget = (STK_Widget *)button;
 	STK_Label *label = button->label;
 	// here to set label's new size (but will trigger a redraw event on label)
-	STK_LabelSetText(label, str);
+	STK_LabelSetCaption(label, str);
 	if (!widget->fixed)
 		STK_ButtonAdapterToChild(button);
 	
@@ -166,6 +166,11 @@ int STK_ButtonSetText(STK_Button *button, char *str)
 	
 	return 0;
 }
+char *STK_ButtonGetCaption(STK_Button *button)
+{
+        STK_Label *lbl = button->label;
+        return STK_LabelGetCaption(lbl);        
+}
 
 int STK_ButtonAdapterToChild(STK_Button *button)
 {
@@ -173,8 +178,9 @@ int STK_ButtonAdapterToChild(STK_Button *button)
 	STK_Widget *child_widget = (STK_Widget *)button->label;
 	SDL_Rect rect, rect_child;
 	
-	STK_BaseRectCopy(&rect, &widget->rect);
+        STK_LabelAdapterToString(button->label);
 	
+	STK_BaseRectCopy(&rect, &widget->rect);	
 	STK_BaseRectCopy(&rect_child, &child_widget->rect);
 	rect_child.w += 2 * widget->border;
 	rect_child.h += 2 * widget->border;
@@ -188,3 +194,8 @@ int STK_ButtonAdapterToChild(STK_Button *button)
 }
 
 
+int STK_ButtonSetFont(STK_Button  *button, STK_Font *font)
+{
+        return STK_LabelSetFont(button->label, font);
+
+}

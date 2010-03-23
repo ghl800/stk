@@ -12,6 +12,7 @@
 #include "stk_radiogroup.h"
 #include "stk_progressbar.h"
 #include "stk_msgbox.h"
+#include "stk_line.h"
 
 int STK_Init();
 int STK_Main();

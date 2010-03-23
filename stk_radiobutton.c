@@ -180,13 +180,13 @@ int STK_RadioButtonRegisterType()
         return 0;
 }
 
-int STK_RadioButtonSetText(STK_RadioButton *rb, char *str)
+int STK_RadioButtonSetCaption(STK_RadioButton *rb, char *str)
 {
 	
 	STK_Widget *widget = (STK_Widget *)rb;
 	STK_Widget *label = rb->label;
 	// here to set label's new size (but will trigger a redraw event on label)
-	STK_LabelSetText(label, str);
+	STK_LabelSetCaption(label, str);
 	if (!widget->fixed)
 		STK_RadioButtonAdapterToChild(rb);
 	
@@ -194,6 +194,12 @@ int STK_RadioButtonSetText(STK_RadioButton *rb, char *str)
 	STK_WidgetEventRedraw(widget);
 	return 0;
 }
+
+char *STK_RadioButtonGetCaption (STK_RadioButton *rb)
+{
+	return STK_LabelGetCaption (rb->label);
+}
+
 
 int STK_RadioButtonAdapterToChild(STK_RadioButton *rb)
 {		
@@ -214,12 +220,6 @@ int STK_RadioButtonAdapterToChild(STK_RadioButton *rb)
 	return 0;
 }
 
-/*
-char *STK_RadioButtonGetText (STK_RadioButton *rb)
-{
-	return STK_LabelGetText (rb->label);
-}
-*/
 
 void STK_RadioButtonSetToggled (STK_RadioButton *rb)
 {

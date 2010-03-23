@@ -2,6 +2,8 @@
 #define _STK_DEFAULT_H_
 
 #include "SDL.h"
+#define STK_LINE_DEFAULT_WIDTH 		0
+#define STK_LINE_DEFAULT_HEIGHT		0
 
 #define STK_LABEL_DEFAULT_WIDTH		60
 #define STK_LABEL_DEFAULT_HEIGHT	30

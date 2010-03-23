@@ -1,5 +1,6 @@
 
 #include "stk.h"
+#if 0
 #include "stk_color.h"
 #include "stk_label.h"
 #include "stk_button.h"
@@ -9,7 +10,12 @@
 #include "stk_radiogroup.h"
 #include "stk_progressbar.h"
 #include "stk_msgbox.h"
+#include "stk_window.h"
+#include "stk_line.h"
+#endif
 
+#if 0
+/*
 STK_Widget *draw_label()
 {
 	
@@ -31,6 +37,8 @@ STK_Widget *draw_button()
 	return (STK_Widget *)button;
 }
 
+*/
+
 STK_Widget *draw_slidebar()
 {
 	STK_Slidebar *slider = (STK_Slidebar *)STK_SlidebarNew(50, 30, 30, 200);
@@ -39,14 +47,7 @@ STK_Widget *draw_slidebar()
 
 }
 
-STK_Widget *draw_entry()
-{
-	STK_Entry *entry = (STK_Entry *)STK_EntryNew("", 20, 150, 30, 200, 50);
-	STK_WidgetEventShow((STK_Widget *)entry);
-	return (STK_Widget *)entry;
-
-}
-
+/*
 STK_Widget *draw_radiobutton()
 {
 	STK_RadioButton *rbutton = (STK_RadioButton *)STK_RadioButtonNew("IgTf", 300, 300, 200, 10);
@@ -54,7 +55,6 @@ STK_Widget *draw_radiobutton()
 	return (STK_Widget *)rbutton;
 
 }
-
 STK_Widget *draw_msgbox()
 {
 	STK_MsgBox *msgbox = (STK_MsgBox *)STK_MsgBoxNew("first line", 20, 300, 250, 155);
@@ -71,9 +71,10 @@ STK_Widget *draw_msgbox()
 	
 	return (STK_Widget *)msgbox;
 }
+*/
 
 char *str[] = {"aaaaaaaaaaaaaaaaaaaaaaaa", "BBBbbbbbbbbbbbbb", "CDdddddddddddddddd", "EFGHfffffffffffffffffffffff" };
-
+/*
 STK_Widget *draw_radiogroup()
 {
 	STK_RadioGroup *rg = (STK_RadioGroup *)STK_RadioGroupNew(str, sizeof(str)/sizeof(char *), 300, 350, 300, 100);
@@ -81,7 +82,7 @@ STK_Widget *draw_radiogroup()
 	
 	return (STK_Widget *)rg;
 }
-
+*/
 STK_Widget *draw_progressbar(Uint32 *p)
 {
 	STK_ProgressBar *pb = (STK_ProgressBar *)STK_ProgressBarNew(p, 400, 20, 200, 50);
@@ -90,7 +91,55 @@ STK_Widget *draw_progressbar(Uint32 *p)
 	return (STK_Widget *)pb;
 }
 
+#endif
 
+void callback_entry_changed(STK_Widget *widget, void *signal, void *uerdata)
+{
+        STK_Entry *entry = (STK_Entry *)widget;
+        char *str;
+        
+        str = STK_EntryGetStr (entry);
+        
+        fprintf(stderr, "entry %s %d\n", str, strlen(str));
+}
+STK_Widget *draw_entry()
+{
+	STK_Entry *entry = (STK_Entry *)STK_EntryNew("", 20, 150, 30, 200, 50);
+	
+	STK_SignalConnect ((STK_Widget *)entry, "changed", callback_entry_changed, NULL);
+	STK_WidgetEventShow((STK_Widget *)entry);
+	return (STK_Widget *)entry;
+
+}
+/*
+void draw_rectarea()
+{
+        SDL_Rect line_rect;
+        
+        line_rect.x = 280;
+        line_rect.y = 350;
+        line_rect.w = 50;
+        line_rect.h = 50;
+        
+        SDL_FillRect(SDL_GetVideoSurface(), &line_rect, 0x00008833);
+	SDL_UpdateRect(SDL_GetVideoSurface(), 0, 0, 0, 0);//line_rect.x, line_rect.y, line_rect.w, line_rect.h);
+
+
+}
+void draw_line()
+{
+        SDL_Rect line_rect;
+        STK_Line *line;
+        
+        line_rect.x = 280;
+        line_rect.y = 350;
+        line_rect.w = 50;
+        line_rect.h = 50;
+        
+        line = STK_LineNew(line_rect.x, line_rect.y, line_rect.w, line_rect.h);
+        STK_WidgetShow ((STK_Widget *)line);        
+}
+*/
 int main(int argc,char **argv)
 {
 
@@ -105,21 +154,23 @@ int main(int argc,char **argv)
 
     	STK_WindowNew(0, 0, 640, 480);
     	
-    	STK_Widget *label = draw_label();
+//    	STK_Widget *label = draw_label();
  //   	printf("Label: %x\n", label);
     	
-    	draw_button();
-    	draw_slidebar();
+//    	draw_button();
+//    	draw_slidebar();
     	draw_entry();
-    	draw_radiobutton();
-    	draw_radiogroup();
-	draw_progressbar(&value);
-	msgbox = (STK_MsgBox *)draw_msgbox();
-	
+//    	draw_radiobutton();
+//    	draw_radiogroup();
+//	draw_progressbar(&value);
+//	msgbox = (STK_MsgBox *)draw_msgbox();
+//	draw_rectarea();
+//	draw_line();
 //	for (i=0; i<200; i++) {
 //		sprintf(str, "%d", i);
 //		STK_MsgBoxAddMsg(msgbox, str);
- //	}	    	
+//	}	    	
+//        SDL_Delay(5000);
     	STK_WindowOpen();
     	
 //    	SDL_Delay(5000);

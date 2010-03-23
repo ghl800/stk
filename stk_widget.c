@@ -36,6 +36,9 @@ int STK_WidgetInit()
 	// for button
 	STK_SignalNew("clicked");
 
+	// for entry
+	STK_SignalNew("changed");
+	
 	//========================================
 	// register type for each kind of widget
 	STK_LabelRegisterType();
@@ -46,7 +49,8 @@ int STK_WidgetInit()
 	STK_RadioGroupRegisterType();
 	STK_ProgressBarRegisterType();
 	STK_MsgBoxRegisterType();
-
+	STK_LineRegisterType();
+	
 	return 0;
 }
 
@@ -151,9 +155,16 @@ int STK_WidgetSetDims(STK_Widget *widget, SDL_Rect *r)
 	return 0;
 }
 
-SDL_Rect STK_WidgetGetDemi(STK_Widget *widget)
+int STK_WidgetGetDims(STK_Widget *widget, SDL_Rect *rect)
 {
-        return widget->rect;
+        if (!widget)
+                return -1;
+                
+        rect->x = widget->rect.x;
+        rect->y = widget->rect.y;
+        rect->w = widget->rect.w;
+        rect->h = widget->rect.h;
+        return 0;
 }
 int STK_WidgetClose(STK_Widget *widget)
 {
@@ -510,3 +521,24 @@ int STK_WidgetSetFixed(STK_Widget *widget, Uint32 flag)
 	return 0;
 }
 
+int STK_WidgetSetColor(STK_Widget *widget, int which, Uint8 r, Uint8 g, Uint8 b)
+{
+	if (!widget) 
+		return -1;
+		
+	switch (which) {
+		case STK_COLOR_FOREGROUND:
+			STK_BaseColorAssign(&widget->fgcolor, r, g, b);
+			break;
+		case STK_COLOR_BACKGROUND:
+			STK_BaseColorAssign(&widget->bgcolor, r, g, b);
+			break;
+		default:
+			break;
+	}
+	
+	// need to submit a redraw event
+	STK_WidgetEventRedraw(widget);
+
+	return 0;
+}

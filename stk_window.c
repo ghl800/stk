@@ -438,7 +438,7 @@ int STK_WindowFillRect(STK_Window *win, SDL_Rect *rect, Uint32 color)
 	r.h = rect->h;
 	
 	SDL_FillRect(win->widget.surface, &r, color);
-	
+	SDL_UpdateRect(win->widget.surface, r.x, r.y, r.w, r.h);
 	return 0;
 }
 

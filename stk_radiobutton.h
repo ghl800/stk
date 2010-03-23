@@ -5,7 +5,7 @@
 #include "stk_image.h"
 #include "stk_label.h"
 
-#define STK_RadioButtonGetText(x)	(STK_LabelGetText(((x)->label)))
+//#define STK_RadioButtonGetText(x)	(STK_LabelGetText(((x)->label)))
 
 typedef enum STK_RadioButtonState {
 	STK_RADIOBUTTON_RELEASE,
@@ -33,7 +33,8 @@ int STK_RadioButtonRegisterType();
 
 void STK_RadioButtonFillLabel(STK_RadioButton *rb);
 void STK_RadioButtonFilling(STK_RadioButton *rb, Uint32 pattern);
-int STK_RadioButtonSetText(STK_RadioButton *rb, char *str);
+int STK_RadioButtonSetCaption(STK_RadioButton *rb, char *str);
+char *STK_RadioButtonGetCaption(STK_RadioButton *rb);
 
 void STK_RadioButtonSetToggled (STK_RadioButton *rb);
 void STK_RadioButtonSetRelease (STK_RadioButton *rb);
